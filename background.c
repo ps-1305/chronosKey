@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <time.h>
 
 FILE* gmailExecutable;
 
@@ -31,27 +32,39 @@ int sendMail(int returnVal){
   }
 }
 
-int otpFunction(char* email){
-  int otp = rand() % (99999 - 10000 + 1) + 10000;
+void otpFunction(char* email, char* otp_to_receive){
+  time_t current_time;
+  struct tm *time_info;
+
+  current_time = time(NULL);
+
+  time_info = localtime(&current_time);
+
+  int hour = time_info->tm_hour;
+  int minute = time_info->tm_min;
+  int second = time_info->tm_sec;
+  char otp[10];
+  sprintf(otp, "%d%d%d%d", (int)(hour/10), (int)(hour%10) + (int)(minute/10), (int)(minute%10) + (int)(second/10), (int)(second%10));
+  sprintf(otp_to_receive, "%s", otp);
   char _otp[100];
-  sprintf(_otp, "OTP is %d", otp);
+  sprintf(_otp, "OTP is %s", otp);
   __init__("avian.aura.ics@gmail.com", "zrki ycwq setx uyrp", "OTP for login", _otp, email);
   sendMail(0);
-  return otp;
 }
 
-bool checkOTP(int user, int actual){
-  return (user==actual) ? true : false;
+bool checkOTP(char* user, char* actual){
+  return (strcmp(user, actual) == 0) ? true : false;
 }
 
 // int main(void){
 //   char email[100];
 //   printf("Tell email to send OTP: ");
 //   scanf("%s", email);
-//   int otp_to_receive = otpFunction(email);
+//   char otp_to_receive[20];
+//   otpFunction(email, otp_to_receive);
 //   printf("Enter OTP received: ");
-//   int rec;
-//   scanf("%d", &rec);
+//   char rec[20];
+//   scanf("%s", rec);
 //   if(checkOTP(otp_to_receive, rec)){
 //     printf("Ok you can login");
 //   } else{
