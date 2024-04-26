@@ -48,7 +48,7 @@ void otpFunction(char* email, char* otp_to_receive){
   sprintf(otp_to_receive, "%s", otp);
   char _otp[100];
   sprintf(_otp, "OTP is %s", otp);
-  __init__("avian.aura.ics@gmail.com", "zrki ycwq setx uyrp", "OTP for login", _otp, email);
+  __init__("smtp_server", "app_password", "OTP for login", _otp, email);
   sendMail(0);
 }
 
